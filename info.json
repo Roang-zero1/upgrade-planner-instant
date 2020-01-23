@@ -1,6 +1,6 @@
 {
     "name": "upgrade-planner-instant",
-    "version": "0.0.0",
+    "version": "0.17.2",
     "title": "Instant Upgrade Planner",
     "author": "Roang",
     "description": "Instantly upgrade buildings with items from you inventory.",
