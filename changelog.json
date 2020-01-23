@@ -1,8 +1,14 @@
 {
+  "0.18.0": {
+    "date": "2020-01-23",
+    "Categories": {
+      "Changes": ["0.18 release"]
+    }
+  },
   "0.17.2": {
     "date": "2020-01-23",
     "Categories": {
-      "Changes": ["Initial commit"]
+      "Changes": ["Update Readme"]
     }
   },
   "0.17.1": {

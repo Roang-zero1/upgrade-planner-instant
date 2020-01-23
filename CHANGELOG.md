@@ -1,10 +1,18 @@
 # Changelog
 
+## 0.18.0 (2020-01-23)
+
+### Changes
+
+- 0.18 release
+
+---
+
 ## 0.17.2 (2020-01-23)
 
 ### Changes
 
-- Initial commit
+- Update Readme
 
 ---
 
