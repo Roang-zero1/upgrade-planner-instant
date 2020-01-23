@@ -6,7 +6,7 @@ data:extend({
     order = 'a[alt-mode]-b[copy]',
     action = 'lua',
     localised_name = {'shortcut.instant-upgrade'},
-    icon = 
+    icon =
     {
       filename = "__upgrade-planner-instant__/graphics/icons/shortcut-bar/shortcut-32.png",
       priority = 'extra-high-no-scale',

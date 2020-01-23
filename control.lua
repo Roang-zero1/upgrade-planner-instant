@@ -1,42 +1,7 @@
 require("mod-gui")
 local Event = require("__stdlib__/stdlib/event/event")
-local Gui = require("__stdlib__/stdlib/event/gui")
-TIMEOUT_ITEM = defines.time.second * 2
-TIMEOUT_OVERLAY = defines.time.second * 5
-SHORTCUT_NAME = "toggle-instant-upgrade"
 
-Event.register(
-  Event.core_events.init,
-  function()
-    global.timeouts = {}
-  end
-)
-
-Event.register(
-  defines.events.on_marked_for_upgrade,
-  function(event)
-    local player = game.players[event.player_index]
-    player_upgrade(player, event.entity, event.target, true)
-  end,
-  function(event)
-    local player = game.players[event.player_index]
-    return player.is_shortcut_toggled(SHORTCUT_NAME)
-  end
-)
-
-Event.register(
-  defines.events.on_lua_shortcut,
-  function(event)
-    local player = game.players[event.player_index]
-    local sc = event.prototype_name
-    player.set_shortcut_toggled(sc, not player.is_shortcut_toggled(sc))
-  end,
-  function(event)
-    return event.prototype_name == SHORTCUT_NAME
-  end
-)
-
-function player_upgrade(player, belt, upgrade, bool)
+local function player_upgrade(player, belt, upgrade, bool)
   if not belt then
     return
   end
@@ -51,7 +16,6 @@ function player_upgrade(player, belt, upgrade, bool)
     local d = belt.direction
     local f = belt.force
     local p = belt.position
-    local n = belt.name
     local new_item
     script.raise_event(defines.events.on_pre_player_mined_item, {player_index = player.index, entity = belt})
     local props = {
@@ -143,7 +107,7 @@ function player_upgrade(player, belt, upgrade, bool)
       belt.destroy()
       player.cursor_stack.build_blueprint {surface = surface, force = f, position = {0, 0}}
       local ghost = surface.find_entities_filtered {area = a, name = "entity-ghost"}
-      player.remove_item {name = belt.name, count = count}
+      player.remove_item {name = belt.name, count = amount}
       local p_x = player.position.x
       local p_y = player.position.y
       while ghost[1] ~= nil do
@@ -171,7 +135,6 @@ function player_upgrade(player, belt, upgrade, bool)
           end
         end
       end
-      inventories = nil
       local proxy = surface.find_entities_filtered {area = a, name = "item-request-proxy"}
       if proxy[1] ~= nil then
         proxy[1].destroy()
@@ -197,7 +160,7 @@ function player_upgrade(player, belt, upgrade, bool)
       end
     end
     if not global.timeouts[target_name] then
-      global.timeouts[target_name] = game.tick + TIMEOUT_ITEM
+      global.timeouts[target_name] = game.tick + defines.time.second * 2
       surface.create_entity {
         name = "flying-text",
         position = {belt.position.x - 1.3, belt.position.y - 0.5},
@@ -218,3 +181,33 @@ function player_upgrade(player, belt, upgrade, bool)
   end
 end
 
+Event.register(
+  Event.core_events.init,
+  function()
+    global.timeouts = {}
+  end
+)
+
+Event.register(
+  defines.events.on_marked_for_upgrade,
+  function(event)
+    local player = game.players[event.player_index]
+    player_upgrade(player, event.entity, event.target, true)
+  end,
+  function(event)
+    local player = game.players[event.player_index]
+    return player.is_shortcut_toggled("toggle-instant-upgrade")
+  end
+)
+
+Event.register(
+  defines.events.on_lua_shortcut,
+  function(event)
+    local player = game.players[event.player_index]
+    local sc = event.prototype_name
+    player.set_shortcut_toggled(sc, not player.is_shortcut_toggled(sc))
+  end,
+  function(event)
+    return event.prototype_name == "toggle-instant-upgrade"
+  end
+)
